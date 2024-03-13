@@ -50,8 +50,14 @@
             }"
           >
             <div class="bg-blue-200">
-              <div class="text-xs font-semibold">{{ element.name }}</div>
-              🩸
+              <div class="text-xs font-semibold">
+                {{ getFieldLabel(element.name) }}
+              </div>
+
+              {{
+                getFieldValue(element.name)
+                  | number : getElementDigitsInfo(element.name)
+              }}
             </div>
           </div>
         </div>

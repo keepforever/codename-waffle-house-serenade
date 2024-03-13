@@ -18,6 +18,7 @@ export class AppComponent implements OnInit {
   title = '';
   layoutResponse?: LayoutResponse = undefined; // Initialize with a default value
   dataResponse?: FullDataResponse = undefined; // Initialize with a default value
+  format = '1.0-0';
 
   constructor(private dashboardService: DashboardService) {}
 
@@ -26,8 +27,6 @@ export class AppComponent implements OnInit {
       this.dashboardService.fetchNewLayoutResponse(),
       this.dashboardService.fetchBackendDataResponse(),
     ]).then(([layoutResponse, dataResponse]) => {
-      // At this point, you have both responses available and can manipulate/join them as needed.
-      // This is a placeholder for your manipulation and joining logic.
       console.group(
         `%capp.component.ts`,
         'color: yellow; font-size: 13px; font-weight: bold;'
@@ -45,5 +44,26 @@ export class AppComponent implements OnInit {
 
   isDataSet(elementType: string): boolean {
     return elementType === 'DATA_SET';
+  }
+
+  getFieldLabel(elementName: string): string {
+    return (
+      this.layoutResponse?.fieldDefinitions?.[elementName]?.label || 'Unknown'
+    );
+  }
+
+  getFieldValue(elementName: string): string | number {
+    const format =
+      this.layoutResponse?.fieldDefinitions?.[elementName]?.digitsInfo || '';
+    const value = this.dataResponse?.dataPoints?.[elementName] || 'Unknown';
+
+    return value;
+  }
+
+  getElementDigitsInfo(elementName: string): string {
+    const format =
+      this.layoutResponse?.fieldDefinitions?.[elementName]?.digitsInfo || '';
+    console.log('\n', `format = `, format, '\n');
+    return format;
   }
 }
