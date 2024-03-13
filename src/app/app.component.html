@@ -1,6 +1,70 @@
-<div class="container mx-auto">
-  <h1 class="text-2xl font-bold text-red-800">hello tailwind</h1>
-  {{ title }}
-</div>
+<nav
+  class="flex w-full bg-blue-600 text-white justify-between items-center px-3"
+>
+  <h4 class="text-sm font-bold tracking-tight">
+    {{ title }}
+  </h4>
+  <div>
+    <h1 class="text-2xl font-bold">hello tailwind</h1>
+  </div>
+</nav>
+
+<main class="max-w-5xl mx-auto p-4">
+  <div class="grid grid-cols-12">
+    <div
+      *ngFor="let group of layoutResponse?.layout"
+      [ngSwitch]="group.type"
+      [ngClass]="{
+        'col-span-1': group.width === 1,
+        'col-span-2': group.width === 2,
+        'col-span-3': group.width === 3,
+        'col-span-4': group.width === 4,
+        'col-span-5': group.width === 5,
+        'col-span-6': group.width === 6,
+        'col-span-7': group.width === 7,
+        'col-span-8': group.width === 8,
+        'col-span-9': group.width === 9,
+        'col-span-10': group.width === 10,
+        'col-span-11': group.width === 11,
+        'col-span-12': group.width === 12
+      }"
+    >
+      <div *ngSwitchCase="'DATA_POINT'" class="bg-yellow-200">
+        <div class="text-xs font-semibold">{{ group.label }}</div>
+        <div class="grid grid-cols-12">
+          <div
+            *ngFor="let element of group?.elements"
+            [ngClass]="{
+              'col-span-1': element.width === 1,
+              'col-span-2': element.width === 2,
+              'col-span-3': element.width === 3,
+              'col-span-4': element.width === 4,
+              'col-span-5': element.width === 5,
+              'col-span-6': element.width === 6,
+              'col-span-7': element.width === 7,
+              'col-span-8': element.width === 8,
+              'col-span-9': element.width === 9,
+              'col-span-10': element.width === 10,
+              'col-span-11': element.width === 11,
+              'col-span-12': element.width === 12
+            }"
+          >
+            <div class="bg-blue-200">
+              <div class="text-xs font-semibold">{{ element.name }}</div>
+              🩸
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngSwitchCase="'DATA_SET'">
+        <h2 class="text-xl font-bold">{{ group.label }}</h2>
+        DATA SET
+      </div>
+
+      <div *ngSwitchDefault>DEFAULT</div>
+    </div>
+  </div>
+</main>
 
 <router-outlet />
