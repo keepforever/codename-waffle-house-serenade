@@ -1,13 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common'; // Import CommonModule
-import {
-  DashboardService,
-  FullDataResponse,
-  LayoutResponse,
-  Format,
-  FormatEnum,
-} from './dashboard.service'; // Adjust the path as necessary
+import { DashboardService } from './dashboard.service'; // Adjust the path as necessary
+import { LayoutResponse, FullDataResponse, FormatEnum } from './interfaces';
 
 @Component({
   selector: 'app-root',
