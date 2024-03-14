@@ -32,7 +32,7 @@
         'col-span-12': group.width === 12
       }"
     >
-      <!-- Data points group -->
+      <!-- DATA_POINT case -->
       <div *ngSwitchCase="'DATA_POINT'" class="">
         <div
           class="text-[12px] font-semibold tracking-tighter border-b mb-2 py-1"
@@ -79,7 +79,7 @@
         </div>
       </div>
 
-      <!-- Data set group -->
+      <!-- DATA_SET case -->
 
       <div *ngSwitchCase="'DATA_SET'">
         <h2 class="text-xs mb-2">{{ group.label }}</h2>
@@ -99,7 +99,6 @@
 
             <tbody>
               <!-- Iterate over the dataset rows -->
-
               <tr
                 *ngFor="
                   let row of getDatasetTableRowsByName(group?.name || '');
@@ -126,6 +125,8 @@
                   <ng-template #notNumber>{{ row[field.name] }} </ng-template>
                 </td>
               </tr>
+
+              <!-- Display the "Total" row -->
 
               <tr class="h-8 border-black border-t-2">
                 <td
@@ -158,6 +159,7 @@
         </div>
       </div>
 
+      <!-- Render nothing if the group type is not recognized -->
       <div *ngSwitchDefault>{{ null }}</div>
     </div>
   </div>
