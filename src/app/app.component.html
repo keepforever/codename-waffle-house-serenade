@@ -66,6 +66,35 @@
       <div *ngSwitchCase="'DATA_SET'">
         <h2 class="font-bold">{{ group.label }}</h2>
 
+        <div *ngFor="let element of group?.elements" [ngSwitch]="group.type">
+          <span class="text-red-500">
+            {{ element.name }}
+          </span>
+
+          <table class="min-w-full">
+            <thead>
+              <tr>
+                <th
+                  *ngFor="let field of element?.fields"
+                  class="p-1 border-b-2 border-gray-200 bg-gray-100 text-left text-[12px] text-gray-600"
+                >
+                  {{ field.name }}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let field of element?.fields">
+                <td
+                  *ngFor="let field of element?.fields"
+                  class="p-1 border-b border-gray-200 bg-white text-sm"
+                >
+                  data
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
         <!-- inspect data -->
         <div class="flex justify-between">
           <details>
