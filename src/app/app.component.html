@@ -1,16 +1,17 @@
 <nav
-  class="flex w-full bg-blue-600 text-white justify-between items-center px-3"
+  class="flex w-full bg-blue-600 text-white justify-between items-center px-3 py-2"
 >
   <h4 class="text-sm font-bold tracking-tight">
     {{ title }}
   </h4>
   <div>
-    <h1 class="text-2xl font-bold">hello tailwind</h1>
+    <h1 class="text-xs font-bold">Reports</h1>
   </div>
 </nav>
 
 <main class="max-w-5xl mx-auto p-4">
-  <div class="grid grid-cols-12 gap-y-4">
+  <div class="grid grid-cols-12 gap-y-4 gap-x-2">
+    <!-- Groups -->
     <div
       *ngFor="let group of layoutResponse?.layout"
       [ngSwitch]="group.type"
@@ -29,9 +30,14 @@
         'col-span-12': group.width === 12
       }"
     >
-      <div *ngSwitchCase="'DATA_POINT'" class="bg-yellow-200">
-        <div class="text-xs font-semibold">{{ group.label }}</div>
+      <div *ngSwitchCase="'DATA_POINT'" class="">
+        <div
+          class="text-[12px] font-semibold tracking-tighter border-b mb-2 py-1"
+        >
+          {{ group.label }}
+        </div>
         <div class="grid grid-cols-12 gap-2">
+          <!-- Data points within a group -->
           <div
             *ngFor="let element of group?.elements"
             [ngClass]="{
@@ -49,15 +55,17 @@
               'col-span-12': element.width === 12
             }"
           >
-            <div class="bg-blue-200">
-              <div class="text-[12px] font-semibold">
+            <div class="">
+              <!-- Label -->
+              <div class="text-[10px] font-semibold">
                 {{ getFieldLabel(element.name) }}
               </div>
-
-              {{
+              <!-- Value -->
+              {{ getFieldValuePrefix(element.name)
+              }}{{
                 getFieldValue(element.name)
                   | number : getElementDigitsInfo(element.name)
-              }}
+              }}{{ getFieldValueSuffix(element.name) }}
             </div>
           </div>
         </div>
@@ -67,12 +75,49 @@
         <h2 class="font-bold">{{ group.label }}</h2>
 
         <div *ngFor="let element of group?.elements" [ngSwitch]="group.type">
-          <span class="text-red-500">
-            {{ element.name }}
-          </span>
+          <table class="min-w-full">
+            <thead>
+              <tr>
+                <th
+                  *ngFor="let field of element?.fields"
+                  class="p-1 border-b-2 border-gray-200 bg-gray-100 text-left text-[10px] text-gray-600"
+                >
+                  {{ field.name }}
+                </th>
+              </tr>
+            </thead>
 
+            <tbody>
+              <!-- Iterate over the dataset rows -->
+              <tr
+                *ngFor="
+                  let row of getDatasetTableRowsByName(group?.name || '');
+                  let i = index
+                "
+                [ngClass]="{ 'bg-gray-200/20': i % 2 !== 0 }"
+                class="h-9"
+              >
+                <!-- For each row, iterate over the fields to display each cell value -->
+                <td
+                  *ngFor="let field of element?.fields"
+                  class="p-1 border-b border-gray-200 text-[12px]"
+                >
+                  <ng-container
+                    *ngIf="isNumber(row[field.name]); else notNumber"
+                  >
+                    {{ getFieldValuePrefix(field.name)
+                    }}{{
+                      row[field.name]
+                        | number : getElementDigitsInfo(field.name)
+                    }}{{ getFieldValueSuffix(field.name) }}
+                  </ng-container>
+                  <ng-template #notNumber>{{ row[field.name] }} </ng-template>
+                </td>
+              </tr>
+            </tbody>
+          </table>
           <!-- inspect data -->
-          <div class="flex justify-between">
+          <div class="flex gap-6">
             <details>
               <summary>table row data</summary>
 
@@ -99,59 +144,10 @@
               >
             </details>
           </div>
-
-          <table class="min-w-full">
-            <thead>
-              <tr>
-                <th
-                  *ngFor="let field of element?.fields"
-                  class="p-1 border-b-2 border-gray-200 bg-gray-100 text-left text-[12px] text-gray-600"
-                >
-                  {{ field.name }}
-                </th>
-              </tr>
-            </thead>
-            <!-- <tbody>
-              <tr *ngFor="let field of element?.fields">
-                <td
-                  *ngFor="let field of element?.fields"
-                  class="p-1 border-b border-gray-200 bg-white text-sm"
-                >
-                  data
-                </td>
-              </tr>
-            </tbody> -->
-            <tbody>
-              <!-- Iterate over the dataset rows -->
-              <tr
-                *ngFor="let row of getDatasetTableRowsByName(group?.name || '')"
-              >
-                <!-- For each row, iterate over the fields to display each cell value -->
-                <td
-                  *ngFor="let field of element?.fields"
-                  class="p-1 border-b border-gray-200 bg-white text-sm"
-                >
-                  <!-- {{ row[field.name] | number : "1.0-2" }} -->
-                  <!-- {{ row[field.name] }} -->
-                  <!-- Adjust number pipe as needed -->
-
-                  <ng-container
-                    *ngIf="isNumber(row[field.name]); else notNumber"
-                  >
-                    {{
-                      row[field.name]
-                        | number : getElementDigitsInfo(field.name)
-                    }}
-                  </ng-container>
-                  <ng-template #notNumber>{{ row[field.name] }}</ng-template>
-                </td>
-              </tr>
-            </tbody>
-          </table>
         </div>
       </div>
 
-      <div *ngSwitchDefault>DEFAULT</div>
+      <div *ngSwitchDefault>{{ null }}</div>
     </div>
   </div>
 </main>

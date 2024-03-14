@@ -5,6 +5,8 @@ import {
   DashboardService,
   FullDataResponse,
   LayoutResponse,
+  Format,
+  FormatEnum,
 } from './dashboard.service'; // Adjust the path as necessary
 
 @Component({
@@ -53,15 +55,25 @@ export class AppComponent implements OnInit {
   }
 
   getFieldValue(elementName: string): string | number {
-    const value = this.dataResponse?.dataPoints?.[elementName] || 'Unknown';
+    const labelConfig = this.layoutResponse?.fieldDefinitions?.[elementName];
 
-    return value;
+    switch (labelConfig?.format) {
+      case FormatEnum.Percent: {
+        if (typeof this?.dataResponse?.dataPoints?.[elementName] === 'number') {
+          return (+this?.dataResponse?.dataPoints?.[elementName] || 0) * 100;
+        } else {
+          return 0;
+        }
+      }
+
+      default:
+        return this.dataResponse?.dataPoints?.[elementName] || 'Error';
+    }
   }
 
   getElementDigitsInfo(elementName: string): string {
     const formatPayload =
       this.layoutResponse?.fieldDefinitions?.[elementName]?.digitsInfo || '';
-
     return formatPayload;
   }
 
@@ -69,15 +81,49 @@ export class AppComponent implements OnInit {
     const dataSet = this.dataResponse?.dataSets?.find(
       (ds) => ds.name === setName
     );
-
     const datasetData = dataSet?.data || [];
-
-    console.log('\n', `datasetData = `, datasetData, '\n');
-
+    // console.log('\n', `datasetData = `, datasetData, '\n');
     return datasetData;
   }
 
   isNumber(value: any): boolean {
     return typeof value === 'number';
+  }
+
+  getFieldValuePrefix(elementName: string): string {
+    const labelConfig = this.layoutResponse?.fieldDefinitions?.[elementName];
+
+    switch (labelConfig?.format) {
+      case FormatEnum.DateTime:
+        return '';
+      case FormatEnum.Currency:
+        return '$';
+      case FormatEnum.Percent:
+        return '';
+      case FormatEnum.Number:
+        return '';
+      case FormatEnum.None:
+        return '';
+      default:
+        return '';
+    }
+  }
+  getFieldValueSuffix(elementName: string): string {
+    const labelConfig = this.layoutResponse?.fieldDefinitions?.[elementName];
+
+    switch (labelConfig?.format) {
+      case FormatEnum.DateTime:
+        return '';
+      case FormatEnum.Currency:
+        return '';
+      case FormatEnum.Percent:
+        return '%';
+      case FormatEnum.Number:
+        return '';
+      case FormatEnum.None:
+        return '';
+      default:
+        return '';
+    }
   }
 }

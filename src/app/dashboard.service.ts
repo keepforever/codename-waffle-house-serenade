@@ -48,8 +48,15 @@ export interface FieldDefinitions {
   [index: string]: FieldDefinition;
 }
 
-type Format = 'datetime' | 'currency' | 'percent' | 'number' | 'none';
-type Type = 'string' | 'double' | 'datetime';
+export type Format = 'datetime' | 'currency' | 'percent' | 'number' | 'none';
+export enum FormatEnum {
+  DateTime = 'datetime',
+  Currency = 'currency',
+  Percent = 'percent',
+  Number = 'number',
+  None = 'none',
+}
+export type Type = 'string' | 'double' | 'datetime';
 
 export interface FieldDefinition {
   label: string;
