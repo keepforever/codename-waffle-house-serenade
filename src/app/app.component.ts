@@ -10,12 +10,12 @@ import { logObjectDetails } from './utils/logObjectDetails';
   standalone: true,
   imports: [RouterOutlet, CommonModule],
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'], // Note: it's `styleUrls`, not `styleUrl`
+  styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit {
   title = '';
-  layoutResponse?: LayoutResponse = undefined; // Initialize with a default value
-  dataResponse?: FullDataResponse = undefined; // Initialize with a default value
+  layoutResponse?: LayoutResponse = undefined;
+  dataResponse?: FullDataResponse = undefined;
 
   constructor(private dashboardService: DashboardService) {}
 
@@ -110,7 +110,6 @@ export class AppComponent implements OnInit {
         );
         return datasetData.length > 0 ? sum / datasetData.length : 0;
       default:
-        // It might be more consistent to return a numeric default for aggregation functions
         return '';
     }
   }
