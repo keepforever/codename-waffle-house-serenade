@@ -1,3 +1,4 @@
+<!-- Static navigation header -->
 <nav
   class="flex w-full bg-blue-600 text-white justify-between items-center px-3 py-2"
 >
@@ -9,9 +10,10 @@
   </div>
 </nav>
 
+<!-- Main content -->
 <main class="max-w-5xl mx-auto p-4">
   <div class="grid grid-cols-12 gap-y-4 gap-x-2">
-    <!-- Groups -->
+    <!-- Iterate over layout groups -->
     <div
       *ngFor="let group of layoutResponse?.layout"
       [ngSwitch]="group.type"
@@ -30,6 +32,7 @@
         'col-span-12': group.width === 12
       }"
     >
+      <!-- Data points group -->
       <div *ngSwitchCase="'DATA_POINT'" class="">
         <div
           class="text-[12px] font-semibold tracking-tighter border-b mb-2 py-1"
@@ -37,7 +40,7 @@
           {{ group.label }}
         </div>
         <div class="grid grid-cols-12 gap-2">
-          <!-- Data points within a group -->
+          <!-- Iterate over elements in a group -->
           <div
             *ngFor="let element of group?.elements"
             [ngClass]="{
@@ -70,6 +73,8 @@
           </div>
         </div>
       </div>
+
+      <!-- Data set group -->
 
       <div *ngSwitchCase="'DATA_SET'">
         <h2 class="font-bold">{{ group.label }}</h2>
