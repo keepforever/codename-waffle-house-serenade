@@ -15,10 +15,10 @@ export class AppComponent implements OnInit {
   title = '';
   layoutResponse?: LayoutResponse = undefined; // Initialize with a default value
   dataResponse?: FullDataResponse = undefined; // Initialize with a default value
-  format = '1.0-0';
 
   constructor(private dashboardService: DashboardService) {}
 
+  /** Initializes component and fetches layout and data responses. */
   ngOnInit() {
     Promise.all([
       this.dashboardService.fetchNewLayoutResponse(),
@@ -39,16 +39,19 @@ export class AppComponent implements OnInit {
     });
   }
 
+  /** Checks if the element type is a data set. */
   isDataSet(elementType: string): boolean {
     return elementType === 'DATA_SET';
   }
 
+  /** Fetches the label for a given field from the layout response. */
   getFieldLabel(elementName: string): string {
     return (
       this.layoutResponse?.fieldDefinitions?.[elementName]?.label || 'Unknown'
     );
   }
 
+  /** Retrieves the value for a given field, applying formatting if necessary. */
   getFieldValue(elementName: string): string | number {
     const labelConfig = this.layoutResponse?.fieldDefinitions?.[elementName];
 
@@ -66,12 +69,14 @@ export class AppComponent implements OnInit {
     }
   }
 
+  /** Returns the digit information for a given element. */
   getElementDigitsInfo(elementName: string): string {
     const formatPayload =
       this.layoutResponse?.fieldDefinitions?.[elementName]?.digitsInfo || '';
     return formatPayload;
   }
 
+  /** Retrieves all rows for a given dataset name. */
   getDatasetTableRowsByName(setName: string) {
     const dataSet = this.dataResponse?.dataSets?.find(
       (ds) => ds.name === setName
@@ -80,6 +85,7 @@ export class AppComponent implements OnInit {
     return datasetData;
   }
 
+  /** Calculates total for a column in a dataset by aggregation function defined. */
   getDatasetColumnTotal(setName: string, fieldName: string) {
     const dataSet = this.dataResponse?.dataSets?.find(
       (ds) => ds.name === setName
@@ -119,10 +125,12 @@ export class AppComponent implements OnInit {
     }
   }
 
+  /** Checks if a value is of type number. */
   isNumber(value: any): boolean {
     return typeof value === 'number';
   }
 
+  /** Determines the prefix for a field value based on its format. */
   getFieldValuePrefix(elementName: string): string {
     const labelConfig = this.layoutResponse?.fieldDefinitions?.[elementName];
 
@@ -142,6 +150,7 @@ export class AppComponent implements OnInit {
     }
   }
 
+  /** Returns the suffix for a given field value based on its format. */
   getFieldValueSuffix(elementName: string): string {
     const labelConfig = this.layoutResponse?.fieldDefinitions?.[elementName];
 
