@@ -53,17 +53,31 @@ export class AppComponent implements OnInit {
   }
 
   getFieldValue(elementName: string): string | number {
-    const format =
-      this.layoutResponse?.fieldDefinitions?.[elementName]?.digitsInfo || '';
     const value = this.dataResponse?.dataPoints?.[elementName] || 'Unknown';
 
     return value;
   }
 
   getElementDigitsInfo(elementName: string): string {
-    const format =
+    const formatPayload =
       this.layoutResponse?.fieldDefinitions?.[elementName]?.digitsInfo || '';
-    console.log('\n', `format = `, format, '\n');
-    return format;
+
+    return formatPayload;
+  }
+
+  getDatasetTableRowsByName(setName: string) {
+    const dataSet = this.dataResponse?.dataSets?.find(
+      (ds) => ds.name === setName
+    );
+
+    const datasetData = dataSet?.data || [];
+
+    console.log('\n', `datasetData = `, datasetData, '\n');
+
+    return datasetData;
+  }
+
+  isNumber(value: any): boolean {
+    return typeof value === 'number';
   }
 }

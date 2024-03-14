@@ -71,6 +71,35 @@
             {{ element.name }}
           </span>
 
+          <!-- inspect data -->
+          <div class="flex justify-between">
+            <details>
+              <summary>table row data</summary>
+
+              <pre class="text-[10px]">
+              {{ getDatasetTableRowsByName(group?.name || "") | json }}
+            </pre
+              >
+            </details>
+
+            <details>
+              <summary>group</summary>
+
+              <pre class="text-[10px]">
+              {{ group | json }}
+            </pre
+              >
+            </details>
+
+            <details>
+              <summary>dataSets</summary>
+              <pre class="text-[10px]">
+              {{ dataResponse?.dataSets | json }}
+            </pre
+              >
+            </details>
+          </div>
+
           <table class="min-w-full">
             <thead>
               <tr>
@@ -82,7 +111,7 @@
                 </th>
               </tr>
             </thead>
-            <tbody>
+            <!-- <tbody>
               <tr *ngFor="let field of element?.fields">
                 <td
                   *ngFor="let field of element?.fields"
@@ -91,26 +120,34 @@
                   data
                 </td>
               </tr>
+            </tbody> -->
+            <tbody>
+              <!-- Iterate over the dataset rows -->
+              <tr
+                *ngFor="let row of getDatasetTableRowsByName(group?.name || '')"
+              >
+                <!-- For each row, iterate over the fields to display each cell value -->
+                <td
+                  *ngFor="let field of element?.fields"
+                  class="p-1 border-b border-gray-200 bg-white text-sm"
+                >
+                  <!-- {{ row[field.name] | number : "1.0-2" }} -->
+                  <!-- {{ row[field.name] }} -->
+                  <!-- Adjust number pipe as needed -->
+
+                  <ng-container
+                    *ngIf="isNumber(row[field.name]); else notNumber"
+                  >
+                    {{
+                      row[field.name]
+                        | number : getElementDigitsInfo(field.name)
+                    }}
+                  </ng-container>
+                  <ng-template #notNumber>{{ row[field.name] }}</ng-template>
+                </td>
+              </tr>
             </tbody>
           </table>
-        </div>
-
-        <!-- inspect data -->
-        <div class="flex justify-between">
-          <details>
-            <summary>group</summary>
-
-            <pre class="text-[10px]">
-              {{ group | json }}
-            </pre>
-          </details>
-
-          <details>
-            <summary>dataSets</summary>
-            <pre class="text-[10px]">
-              {{ dataResponse?.dataSets | json }}
-            </pre>
-          </details>
         </div>
       </div>
 
