@@ -3,6 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common'; // Import CommonModule
 import { DashboardService } from './dashboard.service'; // Adjust the path as necessary
 import { LayoutResponse, FullDataResponse, FormatEnum } from './interfaces';
+import { logObjectDetails } from './utils/logObjectDetails';
 
 @Component({
   selector: 'app-root',
@@ -24,13 +25,14 @@ export class AppComponent implements OnInit {
       this.dashboardService.fetchNewLayoutResponse(),
       this.dashboardService.fetchBackendDataResponse(),
     ]).then(([layoutResponse, dataResponse]) => {
-      console.group(
-        `%capp.component.ts`,
-        'color: yellow; font-size: 13px; font-weight: bold;'
+      logObjectDetails(
+        {
+          layoutResponse,
+          dataResponse,
+        },
+        'app.component.ts, ngOnInit',
+        'yellow'
       );
-      console.log('\n', `layoutResponse = `, layoutResponse, '\n');
-      console.log('\n', `dataResponse = `, dataResponse, '\n');
-      console.groupEnd();
 
       this.layoutResponse = layoutResponse;
       this.dataResponse = dataResponse;
@@ -94,19 +96,6 @@ export class AppComponent implements OnInit {
     const aggFn = labelConfig?.aggFn;
 
     const datasetData = dataSet?.data || [];
-    let payload = 0;
-
-    console.group(
-      `%capp.component.ts`,
-      'color: aqua; font-size: 13px; font-weight: bold;'
-    );
-    console.log('\n', `labelConfig = `, labelConfig, '\n');
-    console.log('\n', `dataSet = `, dataSet, '\n');
-    console.log('\n', `datasetData = `, datasetData, '\n');
-    console.log('\n', `payload = `, payload, '\n');
-    console.log('\n', `setName = `, setName, '\n');
-    console.log('\n', `fieldName = `, fieldName, '\n');
-    console.groupEnd();
 
     switch (aggFn) {
       case 'sum':
@@ -121,7 +110,8 @@ export class AppComponent implements OnInit {
         );
         return datasetData.length > 0 ? sum / datasetData.length : 0;
       default:
-        return ''; // It might be more consistent to return a numeric default for aggregation functions
+        // It might be more consistent to return a numeric default for aggregation functions
+        return '';
     }
   }
 
