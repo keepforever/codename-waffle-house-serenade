@@ -82,8 +82,46 @@ export class AppComponent implements OnInit {
       (ds) => ds.name === setName
     );
     const datasetData = dataSet?.data || [];
-    // console.log('\n', `datasetData = `, datasetData, '\n');
     return datasetData;
+  }
+
+  getDatasetColumnTotal(setName: string, fieldName: string) {
+    const dataSet = this.dataResponse?.dataSets?.find(
+      (ds) => ds.name === setName
+    );
+    const labelConfig = this.layoutResponse?.fieldDefinitions?.[fieldName];
+    const aggFn = labelConfig?.aggFn;
+
+    const datasetData = dataSet?.data || [];
+    let payload = 0;
+
+    console.group(
+      `%capp.component.ts`,
+      'color: aqua; font-size: 13px; font-weight: bold;'
+    );
+    console.log('\n', `labelConfig = `, labelConfig, '\n');
+    console.log('\n', `dataSet = `, dataSet, '\n');
+    console.log('\n', `datasetData = `, datasetData, '\n');
+    console.log('\n', `payload = `, payload, '\n');
+    console.log('\n', `setName = `, setName, '\n');
+    console.log('\n', `fieldName = `, fieldName, '\n');
+    console.groupEnd();
+
+    switch (aggFn) {
+      case 'sum':
+        return datasetData.reduce(
+          (acc, row) => acc + Number(row[fieldName]),
+          0
+        );
+      case 'average':
+        const sum = datasetData.reduce(
+          (acc, row) => acc + Number(row[fieldName]),
+          0
+        );
+        return datasetData.length > 0 ? sum / datasetData.length : 0;
+      default:
+        return ''; // It might be more consistent to return a numeric default for aggregation functions
+    }
   }
 
   isNumber(value: any): boolean {
@@ -108,6 +146,7 @@ export class AppComponent implements OnInit {
         return '';
     }
   }
+
   getFieldValueSuffix(elementName: string): string {
     const labelConfig = this.layoutResponse?.fieldDefinitions?.[elementName];
 

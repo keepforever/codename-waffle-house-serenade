@@ -58,17 +58,22 @@
               'col-span-12': element.width === 12
             }"
           >
-            <div class="">
+            <div class="flex flex-col gap-1">
               <!-- Label -->
+
               <div class="text-[10px] font-semibold">
                 {{ getFieldLabel(element.name) }}
               </div>
+
               <!-- Value -->
-              {{ getFieldValuePrefix(element.name)
-              }}{{
-                getFieldValue(element.name)
-                  | number : getElementDigitsInfo(element.name)
-              }}{{ getFieldValueSuffix(element.name) }}
+
+              <span class="font-semibold">
+                {{ getFieldValuePrefix(element.name)
+                }}{{
+                  getFieldValue(element.name)
+                    | number : getElementDigitsInfo(element.name)
+                }}{{ getFieldValueSuffix(element.name) }}
+              </span>
             </div>
           </div>
         </div>
@@ -77,32 +82,34 @@
       <!-- Data set group -->
 
       <div *ngSwitchCase="'DATA_SET'">
-        <h2 class="font-bold">{{ group.label }}</h2>
+        <h2 class="text-xs mb-2">{{ group.label }}</h2>
 
         <div *ngFor="let element of group?.elements" [ngSwitch]="group.type">
           <table class="min-w-full">
             <thead>
-              <tr>
+              <tr class="h-8">
                 <th
                   *ngFor="let field of element?.fields"
-                  class="p-1 border-b-2 border-gray-200 bg-gray-100 text-left text-[10px] text-gray-600"
+                  class="p-1 border-b-2 border-gray-200 text-left text-[10px] border-t"
                 >
-                  {{ field.name }}
+                  {{ getFieldLabel(field.name) }}
                 </th>
               </tr>
             </thead>
 
             <tbody>
               <!-- Iterate over the dataset rows -->
+
               <tr
                 *ngFor="
                   let row of getDatasetTableRowsByName(group?.name || '');
                   let i = index
                 "
                 [ngClass]="{ 'bg-gray-200/20': i % 2 !== 0 }"
-                class="h-9"
+                class="h-8"
               >
                 <!-- For each row, iterate over the fields to display each cell value -->
+
                 <td
                   *ngFor="let field of element?.fields"
                   class="p-1 border-b border-gray-200 text-[12px]"
@@ -119,36 +126,35 @@
                   <ng-template #notNumber>{{ row[field.name] }} </ng-template>
                 </td>
               </tr>
+
+              <tr class="h-8 border-black border-t-2">
+                <td
+                  *ngFor="let field of element?.fields; let i = index"
+                  class="text-[12px]"
+                >
+                  <ng-container
+                    *ngIf="
+                      isNumber(getDatasetColumnTotal(group.name, field.name));
+                      else notNumber
+                    "
+                  >
+                    {{ getFieldValuePrefix(field.name)
+                    }}{{
+                      getDatasetColumnTotal(group.name, field.name)
+                        | number : getElementDigitsInfo(field.name)
+                    }}{{ getFieldValueSuffix(field.name) }}
+                  </ng-container>
+
+                  <ng-template #notNumber>
+                    <ng-container *ngIf="i === 0; else other">
+                      Total
+                    </ng-container>
+                    <ng-template #other></ng-template>
+                  </ng-template>
+                </td>
+              </tr>
             </tbody>
           </table>
-          <!-- inspect data -->
-          <div class="flex gap-6">
-            <details>
-              <summary>table row data</summary>
-
-              <pre class="text-[10px]">
-              {{ getDatasetTableRowsByName(group?.name || "") | json }}
-            </pre
-              >
-            </details>
-
-            <details>
-              <summary>group</summary>
-
-              <pre class="text-[10px]">
-              {{ group | json }}
-            </pre
-              >
-            </details>
-
-            <details>
-              <summary>dataSets</summary>
-              <pre class="text-[10px]">
-              {{ dataResponse?.dataSets | json }}
-            </pre
-              >
-            </details>
-          </div>
         </div>
       </div>
 
